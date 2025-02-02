@@ -1,0 +1,8 @@
+spring:
+  application.name: hatchling
+springdoc:
+  api-docs:
+    path: /openapi  # and also /openapi.yaml
+  swagger-ui:
+    path: /swagger
+

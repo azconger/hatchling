@@ -1,0 +1,27 @@
+app:
+  applicationId: f32b85e7-4c64-496e-b158-62c8c007f836
+  env: Development
+  host: http://localhost:8080
+  openApiConf:
+    path: /openapi
+    includeAllMethods: true
+    includedMethods:
+      - POST
+      - GET
+      - HEAD
+      - PUT
+      - OPTIONS
+      - PATCH
+#      - DELETE
+    customVariables:
+      - field: thingId
+        values:
+          - theThing
+#        requestMethods:
+#          - GET
+#          - POST
+#          - DELETE
+
+hawk:
+  spider:
+    base: false
