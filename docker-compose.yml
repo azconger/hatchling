@@ -1,0 +1,7 @@
+services:
+  hatchling:
+    build: .
+    image: azconger/hatchling:latest
+    container_name: hatchling
+    ports:
+      - "8080:8080"

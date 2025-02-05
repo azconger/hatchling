@@ -1,5 +1,14 @@
 spring:
   application.name: hatchling
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+#        data: DEBUG
+#        boot: DEBUG
+
 springdoc:
   api-docs:
     path: /openapi  # and also /openapi.yaml

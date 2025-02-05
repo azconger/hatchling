@@ -2,26 +2,31 @@ app:
   applicationId: f32b85e7-4c64-496e-b158-62c8c007f836
   env: Development
   host: http://localhost:8080
+  authentication:
+    external:
+      values:
+        - type: TOKEN
+          tokenType: Bearer
+          value:
+            name: Authorization
+            val: my.little.token
+    loggedInIndicator: ".*"
+    loggedOutIndicator: "^$"
+    testPath:
+      path: "/api/v1/response/injectedResponse"
+      success: ".*200.*"
   openApiConf:
     path: /openapi
-    includeAllMethods: true
+    includeAllMethods: false
     includedMethods:
       - POST
-      - GET
-      - HEAD
       - PUT
-      - OPTIONS
-      - PATCH
-#      - DELETE
     customVariables:
-      - field: thingId
+      - field: responseId
         values:
-          - theThing
-#        requestMethods:
-#          - GET
-#          - POST
-#          - DELETE
+          - injectedResponse
 
-hawk:
-  spider:
-    base: false
+#hawk:
+#  spider:
+#    base: false
+
