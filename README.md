@@ -19,10 +19,10 @@ $ docker compose up [--detach]
 Notes:
 
 * Debug logging is turned on by default from the src/main/resources/application.yml file.
-* The API should be available at `http://localhost:8080/`.
-* The OAS is available as JSON at `http://localhost:8080/openapi`.
-* The OAS is available as YAML at `http://localhost:8080/openapi.yaml`.
-* The Swagger UI is available at `http://localhost:8080/swagger`.
+* The API should be available at http://localhost:8080/.
+* The OAS is available as JSON at http://localhost:8080/openapi.
+* The OAS is available as YAML at http://localhost:8080/openapi.yaml.
+* The Swagger UI is available at http://localhost:8080/swagger.
 
 ## Testing with StackHawk
 
