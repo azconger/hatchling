@@ -24,7 +24,9 @@ class SecurityConfig(
             }
             .authorizeHttpRequests { auth ->
                 auth
-                    // Allow GET requests without authentication (as requested)
+                    // Protected GET endpoint for user profile (requires digest auth)
+                    .requestMatchers(HttpMethod.GET, "/api/v1/user/profile").authenticated()
+                    // Allow other GET requests without authentication  
                     .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                     // Allow access to OpenAPI/Swagger documentation
                     .requestMatchers("/openapi/**", "/swagger/**", "/v3/api-docs/**").permitAll()
