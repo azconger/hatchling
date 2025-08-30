@@ -1,32 +1,23 @@
 app:
-  applicationId: f32b85e7-4c64-496e-b158-62c8c007f836
+  applicationId: 01617de8-c0cc-4952-a0db-b6d376491e33
   env: Development
   host: http://localhost:8080
-  authentication:
-    external:
-      values:
-        - type: TOKEN
-          tokenType: Bearer
-          value:
-            name: Authorization
-            val: my.little.token
-    loggedInIndicator: ".*"
-    loggedOutIndicator: "^$"
-    testPath:
-      path: "/api/v1/response/injectedResponse"
-      success: ".*200.*"
   openApiConf:
     path: /openapi
-    includeAllMethods: false
-    includedMethods:
-      - POST
-      - PUT
-    customVariables:
-      - field: responseId
-        values:
-          - injectedResponse
+  authentication:
+    # MongoDB Atlas-style Digest Authentication via External Command
+    externalCommand:
+      command: "python3 digest-auth.py http://localhost:8080"
+    # Authentication indicators for digest auth
+    loggedInIndicator: ".*200.*OK.*"
+    loggedOutIndicator: ".*401.*Unauthorized.*"
+    testPath:
+      path: "/api/v1/thing"
+      requestMethod: POST
+      requestBody: "thingId=stackhawk"
+      success: ".*200.*"
 
-#hawk:
-#  spider:
-#    base: false
+hawk:
+  spider:
+    base: false
 

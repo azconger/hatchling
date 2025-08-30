@@ -25,7 +25,7 @@ class ThingController {
         return ResponseEntity.ok("Response $responseId deleted")
     }
 
-    /*
+
     @GetMapping("/api/v1/thing")
     fun getThing(@RequestParam(required = false) thingId: String?): ResponseEntity<String> {
         return if (thingId != null) {
@@ -50,5 +50,5 @@ class ThingController {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("thingId is required")
         }
     }
-    */
+
 }
