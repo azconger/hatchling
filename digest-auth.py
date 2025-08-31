@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MongoDB Atlas-style Digest Authentication for StackHawk
+HTTP Digest Authentication for StackHawk
 Outputs JSON with Authorization header for external command authentication
 
 Supports both environment variables and command line arguments:
@@ -12,12 +12,19 @@ import sys
 import json
 import os
 import argparse
+import warnings
+
+# Suppress urllib3 SSL warnings about LibreSSL vs OpenSSL before importing
+warnings.filterwarnings("ignore", message="urllib3 v2 only supports OpenSSL 1.1.1+")
+
 import requests
 from requests.auth import HTTPDigestAuth
+import urllib3
 
 def get_digest_auth_header(target_url, username, password):
     """
     Perform digest authentication handshake and return StackHawk JSON format
+    Only returns authorization header if authentication actually succeeded
     """
     try:
         # Create digest auth object
@@ -30,6 +37,16 @@ def get_digest_auth_header(target_url, username, password):
             auth=auth,
             timeout=10
         )
+        
+        # Check if authentication actually succeeded
+        if response.status_code >= 400:
+            error_msg = f"Authentication failed with HTTP {response.status_code}"
+            if response.status_code == 401:
+                error_msg += " - Invalid credentials or authentication required"
+            elif response.status_code == 403:
+                error_msg += " - Access forbidden"
+            print(json.dumps({"error": error_msg}), file=sys.stderr)
+            sys.exit(1)
         
         # Extract the Authorization header that was used
         auth_header = response.request.headers.get('Authorization')
@@ -60,15 +77,15 @@ def parse_credentials():
     Command line arguments take priority over environment variables
     """
     parser = argparse.ArgumentParser(
-        description='MongoDB Atlas-style Digest Authentication for StackHawk',
+        description='HTTP Digest Authentication for StackHawk',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Using environment variables (StackHawk method)
-  HAWK_USERNAME="mhvtgter" HAWK_PASSWORD="12345..." HAWK_URL="http://localhost:8080/api/v1/user/profile" python3 digest-auth.py
+  HAWK_USERNAME="testuser" HAWK_PASSWORD="abcdef12..." HAWK_URL="http://localhost:8080/api/v1/user/profile" python3 digest-auth.py
   
   # Using command line arguments
-  python3 digest-auth.py --url http://localhost:8080/api/v1/user/profile --username mhvtgter --password 12345...
+  python3 digest-auth.py --url http://localhost:8080/api/v1/user/profile --username testuser --password abcdef12...
   
   # Works with any digest auth endpoint
   python3 digest-auth.py --url http://api.example.com/auth/login --username user --password pass
@@ -78,9 +95,9 @@ Examples:
     parser.add_argument('-u', '--url', 
                        help='Target URL with path (e.g. http://localhost:8080/api/v1/auth) (or use HAWK_URL env var)')
     parser.add_argument('-n', '--username', 
-                       help='Username/Public Key (or use HAWK_USERNAME env var)')
+                       help='Username (or use HAWK_USERNAME env var)')
     parser.add_argument('-p', '--password', 
-                       help='Password/Private Key (or use HAWK_PASSWORD env var)')
+                       help='Password (or use HAWK_PASSWORD env var)')
     
     args = parser.parse_args()
     

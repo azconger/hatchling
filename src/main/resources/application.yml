@@ -16,11 +16,11 @@ springdoc:
   swagger-ui:
     path: /swagger
 
-# Atlas-style API Keys for Digest Authentication
-atlas:
-  api-keys:
-    # Format: public-key: private-key (like MongoDB Atlas Organization API Keys)
-    mhvtgter: 12345678-1234-1234-1234-123456789abc
+# API Credentials for HTTP Digest Authentication  
+digest:
+  credentials:
+    # Format: username: password (for HTTP Digest Authentication)
+    demouser: 12345678-1234-1234-1234-123456789abc
     testuser: abcdef12-3456-7890-abcd-ef1234567890
     stackhawk: 98765432-abcd-efgh-ijkl-mnop12345678
 

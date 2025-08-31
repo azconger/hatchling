@@ -12,8 +12,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    private val atlasDigestFilter: AtlasDigestAuthenticationFilter,
-    private val digestEntryPoint: AtlasDigestAuthenticationEntryPoint
+    private val digestFilter: DigestAuthenticationFilter,
+    private val digestEntryPoint: DigestAuthenticationEntryPoint
 ) {
 
     @Bean
@@ -38,7 +38,7 @@ class SecurityConfig(
             .exceptionHandling { exceptions ->
                 exceptions.authenticationEntryPoint(digestEntryPoint)
             }
-            .addFilterBefore(atlasDigestFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(digestFilter, UsernamePasswordAuthenticationFilter::class.java)
             .csrf { csrf ->
                 csrf.disable()
             }

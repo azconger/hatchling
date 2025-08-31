@@ -1,14 +1,15 @@
 app:
-# applicationId: your8app-id88-here-8kaa-kaww8mongodb
-  applicationId: 01617de8-c0cc-4952-a0db-b6d376491e33
+# applicationId: your8app-id88-here-8kaa-kaww88888888
+  applicationId: c0c9b2af-7e9b-48fd-89eb-b949524d1d25
   env: Development
   host: http://localhost:8080
   openApiConf:
     path: /openapi
   authentication:
-    # MongoDB Atlas-style Digest Authentication via External Command
-    externalCommand:  # remember to set env vars HAWK_USERNAME, HAWK_PASSWORD
-      command: python3 digest-auth.py --url http://localhost:8080/api/v1/user/profile
+    # Digest Authentication via External Command
+    externalCommand:
+#      command: python3 digest-auth.py --url http://localhost:8080/api/v1/user/profile --username stackhawk --password 98765432-abcd-efgh-ijkl-mnop12345678
+      command: ./digest-auth.sh --url http://localhost:8080/api/v1/user/profile --username stackhawk --password 98765432-abcd-efgh-ijkl-mnop12345678
     loggedInIndicator: ".*200.*OK.*"
     loggedOutIndicator: ".*401.*Unauthorized.*"
     testPath:

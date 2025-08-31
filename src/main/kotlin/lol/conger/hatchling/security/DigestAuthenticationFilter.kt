@@ -6,15 +6,14 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.security.MessageDigest
 
 @Component
-class AtlasDigestAuthenticationFilter(
+class DigestAuthenticationFilter(
     private val apiKeyService: ApiKeyService,
-    private val digestEntryPoint: AtlasDigestAuthenticationEntryPoint
+    private val digestEntryPoint: DigestAuthenticationEntryPoint
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -29,9 +28,9 @@ class AtlasDigestAuthenticationFilter(
                 val digestHeader = parseDigestHeader(authHeader.substring(7))
                 val username = digestHeader["username"]
                 
-                if (username != null && apiKeyService.isValidPublicKey(username)) {
-                    val privateKey = apiKeyService.getPrivateKey(username)
-                    if (privateKey != null && validateDigestResponse(request, digestHeader, privateKey)) {
+                if (username != null && apiKeyService.isValidUsername(username)) {
+                    val password = apiKeyService.getPassword(username)
+                    if (password != null && validateDigestResponse(request, digestHeader, password)) {
                         val authorities = listOf(SimpleGrantedAuthority("ROLE_API_USER"))
                         val authentication = UsernamePasswordAuthenticationToken(username, null, authorities)
                         SecurityContextHolder.getContext().authentication = authentication
@@ -67,7 +66,7 @@ class AtlasDigestAuthenticationFilter(
     private fun validateDigestResponse(
         request: HttpServletRequest, 
         digestHeader: Map<String, String>,
-        privateKey: String
+        password: String
     ): Boolean {
         val username = digestHeader["username"] ?: return false
         val realm = digestHeader["realm"] ?: return false
@@ -79,7 +78,7 @@ class AtlasDigestAuthenticationFilter(
         val cnonce = digestHeader["cnonce"]
         
         // Calculate HA1 = MD5(username:realm:password)
-        val ha1 = md5("$username:$realm:$privateKey")
+        val ha1 = md5("$username:$realm:$password")
         
         // Calculate HA2 = MD5(method:uri)
         val ha2 = md5("${request.method}:$uri")

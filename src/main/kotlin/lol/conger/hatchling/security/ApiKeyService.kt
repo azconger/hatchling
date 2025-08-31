@@ -4,28 +4,28 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 
-@ConfigurationProperties(prefix = "atlas")
-data class AtlasProperties(
-    val apiKeys: Map<String, String> = emptyMap()
+@ConfigurationProperties(prefix = "digest")
+data class DigestAuthProperties(
+    val credentials: Map<String, String> = emptyMap()
 )
 
 @Service
-@EnableConfigurationProperties(AtlasProperties::class)
-class ApiKeyService(private val atlasProperties: AtlasProperties) {
+@EnableConfigurationProperties(DigestAuthProperties::class)
+class ApiKeyService(private val digestAuthProperties: DigestAuthProperties) {
     
-    fun validateCredentials(publicKey: String, privateKey: String): Boolean {
-        return atlasProperties.apiKeys[publicKey] == privateKey
+    fun validateCredentials(username: String, password: String): Boolean {
+        return digestAuthProperties.credentials[username] == password
     }
     
-    fun getPrivateKey(publicKey: String): String? {
-        return atlasProperties.apiKeys[publicKey]
+    fun getPassword(username: String): String? {
+        return digestAuthProperties.credentials[username]
     }
     
-    fun getAllApiKeys(): Map<String, String> {
-        return atlasProperties.apiKeys
+    fun getAllCredentials(): Map<String, String> {
+        return digestAuthProperties.credentials
     }
     
-    fun isValidPublicKey(publicKey: String): Boolean {
-        return atlasProperties.apiKeys.containsKey(publicKey)
+    fun isValidUsername(username: String): Boolean {
+        return digestAuthProperties.credentials.containsKey(username)
     }
 }

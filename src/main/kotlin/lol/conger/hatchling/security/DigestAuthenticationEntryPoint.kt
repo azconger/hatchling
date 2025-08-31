@@ -9,11 +9,11 @@ import java.security.SecureRandom
 import java.util.*
 
 @Component
-class AtlasDigestAuthenticationEntryPoint : AuthenticationEntryPoint {
+class DigestAuthenticationEntryPoint : AuthenticationEntryPoint {
     
-    private val realm = "MongoDB Atlas API"
+    private val realm = "API"
     private val nonceValiditySeconds = 300
-    private val key = "hatchling-atlas-api"
+    private val key = "hatchling-api"
     
     override fun commence(
         request: HttpServletRequest,

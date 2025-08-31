@@ -1,6 +1,6 @@
 # Hatchling API
 
-A knockabout API for testing things that use APIs, like StackHawk. Features MongoDB Atlas-style digest authentication for security testing.
+A knockabout API for testing things that use APIs, like StackHawk. Features HTTP digest authentication for security testing.
 
 ## Running Hatchling API
 
@@ -26,7 +26,7 @@ Notes:
 
 ## Digest Authentication
 
-The API includes MongoDB Atlas-style digest authentication. The protected endpoint `/api/v1/user/profile` requires digest auth, while other GET endpoints are publicly accessible.
+The API includes HTTP digest authentication. The protected endpoint `/api/v1/user/profile` requires digest auth, while other GET endpoints are publicly accessible.
 
 ### Pre-configured Test Credentials
 
@@ -55,7 +55,7 @@ $ HAWK_USERNAME="testuser" HAWK_PASSWORD="abcdef12-3456-7890-abcd-ef1234567890" 
 The `digest-auth.py` and `digest-auth.sh` scripts output StackHawk-compatible JSON for External Command Authentication:
 
 ```json
-{"headers": [{"Authorization": "Digest username=\"testuser\", realm=\"MongoDB Atlas API\", ..."}], "cookies": []}
+{"headers": [{"Authorization": "Digest username=\"testuser\", realm=\"API\", ..."}], "cookies": []}
 ```
 
 ## Testing with StackHawk
